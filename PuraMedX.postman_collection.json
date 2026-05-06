@@ -1,0 +1,723 @@
+{
+  "info": {
+    "_postman_id": "3b5b1252-b4e2-423c-91b7-0972b6ea5736",
+    "name": "PuraMedX",
+    "description": "## PuraMedX API\n\nPuraMedX is a healthcare management API designed to streamline interactions between patients, doctors, and administrators.\n\nThis API supports secure authentication using JWT (access and refresh tokens), role-based authorization, appointment booking and management, secure medical report uploads via Cloudinary, and real-time access to patient medical history.\n\nKey Features:\n\n- User authentication (Patient, Doctor, Admin)\n    \n- Role-based access control\n    \n- Patient & Doctor profile management\n    \n- Appointment booking, cancellation, and tracking\n    \n- Secure report upload and access using signed URLs\n    \n- Email notifications for appointment activities\n    \n- Doctor dashboard and patient history insights\n    \n\nThis collection is organized into logical folders representing each core module of the system for easy testing and navigation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52437339",
+    "_collection_link": "https://go.postman.co/collection/52437339-3b5b1252-b4e2-423c-91b7-0972b6ea5736?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register (Patient)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Patient One\",\r\n    \"email\": \"patientone@mail.com\",\r\n    \"password\": \"Test@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "#### Registers a new patient.\n\nValidates input, hashes password securely, and returns an access token upon successful registration."
+          },
+          "response": []
+        },
+        {
+          "name": "Register (Doctor)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Doctor One\",\r\n    \"email\": \"doctorone@mail.com\",\r\n    \"password\": \"Test@123\",\r\n    \"role\": \"doctor\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "#### Registers a new doctor.\n\nValidates input, hashes password securely, and returns an access token upon successful registration."
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"patientone@mail.com\",\r\n    \"password\": \"Test@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "#### Authenticates a user and returns a JWT access token along with a refresh token stored in cookies."
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/auth/refresh-token",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh-token"
+              ]
+            },
+            "description": "#### Handles refresh token generation after access token expiration."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "#### Logs user out of their logged in session on the App."
+          },
+          "response": []
+        }
+      ],
+      "description": "#### Handles user authentication including registration, login, token refresh, and logout.\n\nSupports role-based users (patient and doctor) and issues JWT tokens for secure access to protected endpoints."
+    },
+    {
+      "name": "Create Profile",
+      "item": [
+        {
+          "name": "Doctor Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZmExOGNlOGFiZGJjNjE2ZWZjNDRmYSIsInJvbGUiOiJkb2N0b3IiLCJpYXQiOjE3NzgwMTU0NjksImV4cCI6MTc3ODAxNjM2OX0.cBLPCsrb-0DMSGs0yfqc0nkTZLhRerl5WGE8GS0ZNwA",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"specialization\": \"General Practitioner\",\r\n    \"experience\": \"20\",\r\n    \"gender\": \"male\",\r\n    \"availability\": [\r\n        {\r\n        \"day\": \"Monday\", \r\n        \"slots\": [\"08:00\", \"09:00\", \"10:00\", \"11:00\", \"12:00\", \"01:00\", \"02:00\", \"03:00\", \"04:00\"]\r\n        },\r\n        {\r\n        \"day\": \"Tuesday\", \r\n        \"slots\": [\"08:00\", \"09:00\", \"10:00\", \"11:00\", \"12:00\", \"01:00\", \"02:00\", \"03:00\", \"04:00\"]\r\n        },\r\n        {\r\n        \"day\": \"Wednesday\",\r\n        \"slots\": [\"08:00\", \"09:00\", \"10:00\", \"11:00\", \"12:00\", \"01:00\", \"02:00\", \"03:00\", \"04:00\"]\r\n        },\r\n        {\r\n        \"day\": \"Thursday\",\r\n        \"slots\": [\"08:00\", \"09:00\", \"10:00\", \"11:00\", \"12:00\", \"01:00\", \"02:00\", \"03:00\", \"04:00\"]\r\n        },\r\n        {\r\n        \"day\": \"Friday\",\r\n        \"slots\": [\"08:00\", \"09:00\", \"10:00\", \"11:00\", \"12:00\", \"01:00\", \"02:00\", \"03:00\", \"04:00\"]\r\n        },\r\n        {\r\n        \"day\": \"Saturday\", \r\n        \"slots\": [\"12:00\", \"01:00\", \"02:00\", \"03:00\", \"04:00\", \"05:00\"]\r\n        }   \r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/doctors",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "doctors"
+              ]
+            },
+            "description": "#### Creates a doctor profile linked to the authenticated user.\n\nPrevents duplicate profile creation."
+          },
+          "response": []
+        },
+        {
+          "name": "Patient Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZmExOGMwOGFiZGJjNjE2ZWZjNDRmOSIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzc4MDEzODc5LCJleHAiOjE3NzgwMTQ3Nzl9.ctrdaSKaVynrv2iM-APHjeH_r-2rt_0XSRw7-_JfAsg",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"age\": 32,\r\n    \"gender\": \"female\",\r\n    \"medicalHistory\": \"Patient is infected with toilet diseases from use of public restrooms but she has been placed on medications.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/patients",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "patients"
+              ]
+            },
+            "description": "#### Creates a patient profile linked to the authenticated user.\n\nPrevents duplicate profile creation."
+          },
+          "response": []
+        }
+      ],
+      "description": "#### Handles patient and doctor profile creation and retrieval.\n\nPatients and doctors must create a profile after registration before accessing core features."
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Create Admin (Bootstrap)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Super Admin\",\r\n    \"email\": \"superadmin@mail.com\",\r\n    \"password\": \"Test@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/admin/create-admin",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "create-admin"
+              ]
+            },
+            "description": "#### Bootstrap creation of the first admin without authentication."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Admin (Protected)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "#### Creation of additional admins by a registered admin using authentication."
+          },
+          "response": []
+        }
+      ],
+      "description": "#### Manages administrative operations including bootstrap creation of the first admin and creation of additional admins.\n\nImplements strict role-based access control ensuring only authorized admins can perform privileged actions."
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Book Appointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWE1N2EzMTk4ODJlZGNiZmEwMTg2OCIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzc4MDAzODMyLCJleHAiOjE3NzgwMDQ3MzJ9.pHO4sBi9hndZvkzBokndIvFajHxP-E0bRwz8xD0Ysu4",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"doctorId\": \"69ea5cfa19882edcbfa0186b\",\r\n    \"date\": \"2026-05-08\",\r\n    \"time\": \"02:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/appointments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "appointments"
+              ]
+            },
+            "description": "#### Allows a patient to book an appointment with a doctor.\n\nValidates doctor existence, prevents past date booking, and ensures proper ownership."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Appointment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWE1N2EzMTk4ODJlZGNiZmEwMTg2OCIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzc4MDA0ODc2LCJleHAiOjE3NzgwMDU3NzZ9.h8jHmU7C7sKbhIv3LUJXMDDSG_Q_gGPaT2mRtPQgSYs",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/appointments/69fa325652ab14557704dce4/cancel",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "69fa325652ab14557704dce4",
+                "cancel"
+              ]
+            },
+            "description": "#### Cancels an existing appointment.\n\nPrevents multiple cancellations and triggers email notification."
+          },
+          "response": []
+        }
+      ],
+      "description": "#### Manages appointment lifecycle including booking, cancellation, and scheduling.\n\nIncludes validation for ownership, date constraints, and role-based access."
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Upload Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWE1N2EzMTk4ODJlZGNiZmEwMTg2OCIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzc4MDA2MDEyLCJleHAiOjE3NzgwMDY5MTJ9.AbRvxH1A5Nd0jH-YM-lCNNo8Z2eUD-Sl6zA7ikSR86o",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "reports",
+                  "type": "file",
+                  "uuid": "217b648f-d7e8-4e22-98ad-63db70e29345",
+                  "src": [
+                    "/C:/Users/Lenovo/Documents/BabyFace/VS Code/Drug_prescription_paper.jpg",
+                    "/C:/Users/Lenovo/Documents/BabyFace/VS Code/images.jfif"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/appointments/69fa325652ab14557704dce4/upload",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "69fa325652ab14557704dce4",
+                "upload"
+              ]
+            },
+            "description": "#### Uploads one or more medical reports to a specific appointment.\n\nStores files securely on Cloudinary and links them to the appointment."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWE1N2EzMTk4ODJlZGNiZmEwMTg2OCIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzc4MDA2MDEyLCJleHAiOjE3NzgwMDY5MTJ9.AbRvxH1A5Nd0jH-YM-lCNNo8Z2eUD-Sl6zA7ikSR86o",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/appointments/69fa325652ab14557704dce4/reports",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "69fa325652ab14557704dce4",
+                "reports"
+              ]
+            },
+            "description": "#### Retrieves reports associated with an appointment using signed URLs for secure access."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Report",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWE1N2EzMTk4ODJlZGNiZmEwMTg2OCIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzc4MDA4NDcyLCJleHAiOjE3NzgwMDkzNzJ9.31mUxANOMtCeTADeEA8jUYvk7YghycABd9Q3dsb_IuE",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/appointments/69fa325652ab14557704dce4/report/69fa38d952ab14557704dd02",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "69fa325652ab14557704dce4",
+                "report",
+                "69fa38d952ab14557704dd02"
+              ]
+            },
+            "description": "#### Deletes reports associated with an appointment from the database and Cloudinary."
+          },
+          "response": []
+        }
+      ],
+      "description": "#### Handles secure upload, retrieval, and deletion of medical reports.\n\nUses Cloudinary for storage and signed URLs for controlled access."
+    },
+    {
+      "name": "History",
+      "item": [
+        {
+          "name": "Patient History by Patient (Pagination)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWE1N2EzMTk4ODJlZGNiZmEwMTg2OCIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzc4MDA4NDcyLCJleHAiOjE3NzgwMDkzNzJ9.31mUxANOMtCeTADeEA8jUYvk7YghycABd9Q3dsb_IuE",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/patients/me/history",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "patients",
+                "me",
+                "history"
+              ]
+            },
+            "description": "#### Provides access to patient to check their medical history including past appointments, reports, and doctor notes."
+          },
+          "response": []
+        },
+        {
+          "name": "Patient History by Doctor",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWE1Nzg2MTk4ODJlZGNiZmEwMTg2NyIsInJvbGUiOiJkb2N0b3IiLCJpYXQiOjE3NzgwMDk1ODMsImV4cCI6MTc3ODAxMDQ4M30.o2nflU8ZxhAz9EjVhrBGwmeHwhMZIPjTifBFnx514s8",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/doctors/patient/69ea59d519882edcbfa0186a/history",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "doctors",
+                "patient",
+                "69ea59d519882edcbfa0186a",
+                "history"
+              ]
+            },
+            "description": "#### Provides access to doctors to check patient medical history including past appointments, reports, and doctor notes provided they have a relationship."
+          },
+          "response": []
+        }
+      ],
+      "description": "#### Provides access to patient medical history including past appointments, reports, and doctor notes.\n\nSupports filtering and pagination for efficient data retrieval."
+    },
+    {
+      "name": "Doctor",
+      "item": [
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWE1Nzg2MTk4ODJlZGNiZmEwMTg2NyIsInJvbGUiOiJkb2N0b3IiLCJpYXQiOjE3NzgwMDk1ODMsImV4cCI6MTc3ODAxMDQ4M30.o2nflU8ZxhAz9EjVhrBGwmeHwhMZIPjTifBFnx514s8",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/doctors/dashboard",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "doctors",
+                "dashboard"
+              ]
+            },
+            "description": "#### Handles doctor schedule information such as total appointments, complleted appointments, total patients and upcoming appointments."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Notes",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWE1Nzg2MTk4ODJlZGNiZmEwMTg2NyIsInJvbGUiOiJkb2N0b3IiLCJpYXQiOjE3NzgwMDk1ODMsImV4cCI6MTc3ODAxMDQ4M30.o2nflU8ZxhAz9EjVhrBGwmeHwhMZIPjTifBFnx514s8",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"notes\": \"Patient responding well to treatment\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/appointments/69fa325652ab14557704dce4/notes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "appointments",
+                "69fa325652ab14557704dce4",
+                "notes"
+              ]
+            },
+            "description": "#### Handles adding of notes by doctors upon consultation by patients."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Doctor by ID",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZmExOGMwOGFiZGJjNjE2ZWZjNDRmOSIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzc4MDEzODc5LCJleHAiOjE3NzgwMTQ3Nzl9.ctrdaSKaVynrv2iM-APHjeH_r-2rt_0XSRw7-_JfAsg",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/doctors/69fa5e8500422d0594d9b8c5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "doctors",
+                "69fa5e8500422d0594d9b8c5"
+              ]
+            },
+            "description": "#### Retrieves an available doctors with their profile information. Accessible publicly without authentication."
+          },
+          "response": []
+        },
+        {
+          "name": "Get all Doctors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/v1/doctors/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "doctors",
+                "all"
+              ]
+            },
+            "description": "#### Retrieves a list of all available doctors with their profile information. Accessible publicly without authentication."
+          },
+          "response": []
+        }
+      ],
+      "description": "#### Handles doctor profile management and public access to Doctor information.\n\nDoctors can add consultation notes and access patient-related data based on authorized interactions. Patients can also view available doctors, their specialization, and details before booking appointments."
+    },
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health Check",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZmExOGMwOGFiZGJjNjE2ZWZjNDRmOSIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzc4MDEzODc5LCJleHAiOjE3NzgwMTQ3Nzl9.ctrdaSKaVynrv2iM-APHjeH_r-2rt_0XSRw7-_JfAsg",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/v1/system/health",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "v1",
+                "system",
+                "health"
+              ]
+            },
+            "description": "#### Useful for monitoring, debugging, and uptime verification."
+          },
+          "response": []
+        }
+      ],
+      "description": "#### Performs a health check on the API to confirm that the server is running and responsive."
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
